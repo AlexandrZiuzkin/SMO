@@ -53,7 +53,7 @@ def main_event(ro, p1, p2, ticks, labels_counter, Acounter, Lccounter, Wccounter
     
     for tick in range(1, ticks + 1):
 
-        if not P2:
+        if not p2:
             for chance in trans_matrix:
                 chance[trans_states['011']] = 0
                 chance[trans_states['111']] = 0
