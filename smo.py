@@ -2,65 +2,65 @@
 
 import random
 
-def change_state(A, state, states_counter, states):
+def change_state(trans_matrix, state, states_counter, trans_states):
     
-    state = random.choices(list(states.keys()), weights=A[states[state]])[0]
+    state = random.choices(list(trans_states.keys()), weights= trans_matrix[trans_states[state]])[0]
     states_counter[state] = states_counter[state] + 1
 
     return state, states_counter
 
     
-def make_cacl(tick, Acounter, Lccounter, Wccounter, Tickscounter, P1, P2, states_counter):
+def make_cacl(tick, ac_counter, lc_counter, wc_counter, ticks_counter, p1, p2, states_counter):
 
-    P000 = states_counter['000']
-    P100 = states_counter['100']
-    P001 = states_counter['001']
-    P101 = states_counter['101']
-    P111 = states_counter['111']
-    P011 = states_counter['011']
+    p000 = states_counter['000']
+    p100 = states_counter['100']
+    p001 = states_counter['001']
+    p101 = states_counter['101']
+    p111 = states_counter['111']
+    p011 = states_counter['011']
 
-    P000 = P000  / tick if P000 else 0
-    P100 = P100  / tick if P100 else 0
-    P001 = P001  / tick if P001 else 0
-    P101 = P101  / tick if P101 else 0
-    P111 = P111  / tick if P111 else 0
-    P011 = P011  / tick if P011 else 0
+    p000 = p000  / tick if p000 else 0
+    p100 = p100  / tick if p100 else 0
+    p001 = p001  / tick if p001 else 0
+    p101 = p101  / tick if p101 else 0
+    p111 = p111  / tick if p111 else 0
+    p011 = p011  / tick if p011 else 0
 
-    Ac = (1 - P2) * (1 - P000 - P100)
-    Lc = sum([k.count('1') * v  for k,v in states_counter.items()]) / tick
-    Wc = (1 / (1 - P1)) + (P001 + P101 + 2*(P111 + P011)) / Ac
+    ac = (1 - p2) * (1 - p000 - p100)
+    lc = sum([k.count('1') * v  for k,v in states_counter.items()]) / tick
+    wc = (1 / (1 - p1)) + (p001 + p101 + 2*(p111 + p011)) / ac
 
-    Acounter.setText(str(round(Ac, 3)))
-    Lccounter.setText(str(round(Lc, 3)))
-    Wccounter.setText(str(round(Wc, 3)))
-    Tickscounter.setText(str(round(tick, 3)))
+    ac_counter.setText(str(round(ac, 3)))
+    lc_counter.setText(str(round(lc, 3)))
+    wc_counter.setText(str(round(wc, 3)))
+    ticks_counter.setText(str(round(tick, 3)))
 
 
-def main_event(Ro, P1, P2, Ticks, labels_counter, Acounter, Lccounter, Wccounter, Tickscounter):
+def main_event(ro, p1, p2, ticks, labels_counter, Acounter, Lccounter, Wccounter, Tickscounter):
 
-    A = [
-    [Ro, 0,  1-Ro,  0, 0, 0],
-    [Ro*(1 - P2), Ro*P2,  (1 - Ro) * ( 1- P2), (1 - Ro)*P2,  0, 0],
-    [0, Ro*(1 - P1),  P1,  (1 - Ro)*(1 - P1), 0, 0],
-    [0, Ro* (1-P1)*(1-P2),  P1*(1-P2), P1*P2 + (1 - Ro)*(1 - P1)*(1 - P2),  Ro *(1-P1)*P2, (1 - Ro) * (1 - P1)],
-    [0, Ro*(1-P2),  0,  (1-Ro)*(1-P2), Ro*P2, (1-Ro)*P2],
-    [0, 0, 0, P1*(1-P2), Ro * (1-P1), P1*P2 + (1 - Ro) * (1 - P1)]
+    trans_matrix = [
+    [ro, 0,  1-ro,  0, 0, 0],
+    [ro*(1 - p2), ro*p2,  (1 - ro) * ( 1- p2), (1 - ro)*p2,  0, 0],
+    [0, ro*(1 - p1),  p1,  (1 - ro)*(1 - p1), 0, 0],
+    [0, ro* (1-p1)*(1-p2),  p1*(1-p2), p1*p2 + (1 - ro)*(1 - p1)*(1 - p2),  ro *(1-p1)*p2, (1 - ro) * (1 - p1)],
+    [0, ro*(1-p2),  0,  (1-ro)*(1-p2), ro*p2, (1-ro)*p2],
+    [0, 0, 0, p1*(1-p2), ro * (1-p1), p1*p2 + (1 - ro) * (1 - p1)]
     ]
 
     state = '000'    
-    states = {'000': 0, '001': 1, '100': 2, '101': 3, '011': 4, '111': 5}
+    trans_states = {'000': 0, '001': 1, '100': 2, '101': 3, '011': 4, '111': 5}
     states_counter = {'000': 0, '001': 0, '100': 0, '101': 0, '011': 0, '111': 0}
     
-    for tick in range(1, Ticks + 1):
+    for tick in range(1, ticks + 1):
 
         if not P2:
-            for i in A:
-                i[states['011']] = 0
-                i[states['111']] = 0
+            for chance in trans_matrix:
+                chance[trans_states['011']] = 0
+                chance[trans_states['111']] = 0
 
-        state, states_counter = change_state(A, state, states_counter, states)
+        state, states_counter = change_state(trans_matrix, state, states_counter, trans_states)
 
     for label_counter, state_counter in zip(labels_counter, list(states_counter.values())):
         label_counter.setText(str(state_counter))
         
-    make_cacl(Ticks, Acounter, Lccounter, Wccounter, Tickscounter, P1, P2, states_counter)
+    make_cacl(ticks, ac_counter, lc_counter, wc_counter, ticks_counter, p1, p2, states_counter)
