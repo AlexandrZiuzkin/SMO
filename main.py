@@ -24,17 +24,17 @@ class ExampleApp(QtWidgets.QMainWindow, design.Ui_Dialog):
         self.label111counter,
         ]
 
-        Ro = self.RoLineEdit
-        P1 = self.P1LineEdit
-        P2 = self.P2LineEdit
-        Ticks = self.TicksLineEdit
+        ro = self.RoLineEdit
+        p1 = self.P1LineEdit
+        p2 = self.P2LineEdit
+        ticks = self.TicksLineEdit
 
-        Acounter = self.Acounter
-        Lccounter = self.Lccounter
-        Wccounter = self.Wccounter
-        Tickscounter = self.Tickscounter
+        ac_counter = self.Acounter
+        lc_counter = self.Lccounter
+        wc_counter = self.Wccounter
+        ticks_counter = self.Tickscounter
 
-        main_event(float(Ro.text()), float(P1.text()), float(P2.text()), int(Ticks.text()), labels_counter, Acounter, Lccounter, Wccounter, Tickscounter)
+        main_event(float(ro.text()), float(p1.text()), float(p2.text()), int(ticks.text()), labels_counter, ac_counter, lc_counter, wc_counter, ticks_counter)
         
 
 def main():
